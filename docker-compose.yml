@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  # Serviço que irá rodar o node
+  backend:
+    # Constrói a imagem base do container baseada no Dockerfile
+    build: .
+    # Nome do container para facilitar execução
+    container_name: talker_manager
+    # Mesmo que `docker run -t`
+    tty: true
+    # Mesmo que `docker run -i`
+    stdin_open: true
+    # Restarta a imagem caso algo a faça parar
+    restart: always
+    # Lista de volumes (diretórios) mapeados de fora para dentro do container
+    volumes:
+      # Monta o diretório /src, com o código da aplicação, 
+      # dentro do diretório /app
+      - ./src:/app/src
+    # Lista de portas mapeadas de dentro para fora do container
+    # na notação porta_de_fora:porta_de_dentro
+    ports:
+      # Expõe a porta padrão da aplicação: altere aqui caso use outra porta
+      - 3001:3001
+      - 9229:9229
+    # Variáveis de ambiente para comunicação com o banco de dados (requisito 12)
+    environment:
+      PORT: 3001
+      MYSQL_HOSTNAME: db
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: TalkerDB
+
+  db:
+    container_name: talker_manager_db
+    image: mysql:8.0.32
+    restart: always
+    ports:
+      # Expõe a porta padrão do banco de dados
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: TalkerDB
+    volumes:
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+
+networks:
+  default:
+    name: talker_manager_net
+
+# As chaves `tty`, `stdin_open` e `command` fazem com que o container fique
+# rodando em segundo plano, bem como tornam possível o uso do comando
+# `docker attach`, já deixando o terminal atual acoplado ao container, direto
+# no bash. Apesar disso, utilizar o attach mais de uma vez irá replicar o
+# terminal, portanto é melhor utilizar o comando `docker exec`.
+
+# A renomeação da rede padrão é feita pois caso contrário o nome da rede será
+# o nome do diretório onde o arquivo atual se encontra, o que pode dificultar
+# a listagem individual.
