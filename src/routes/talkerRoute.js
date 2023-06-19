@@ -8,13 +8,14 @@ const validateAge = require('../middlewares/validateAge');
 const validateWatched = require('../middlewares/validateWatched');
 const validateRate = require('../middlewares/validateRate');
 const validateFilterRate = require('../middlewares/validateFilterRate');
+const validateFilterDate = require('../middlewares/validateFilterDate');
 
 const router = express.Router();
 
-router.get('/search', validateToken, validateFilterRate, async (req, res) => {
+router.get('/search', validateToken, validateFilterRate,  validateFilterDate,   async (req, res) => {
     try {
-        const { q, rate } = req.query;
-        const query = await filterByTalker(q, Number(rate));
+        const { q, rate, date } = req.query;
+        const query = await filterByTalker(q, Number(rate), date);
         return res.status(200).json(query);
     } catch (error) {
         return res.status(500).json({ error });

@@ -22,7 +22,7 @@ const readFileById = async (id) => {
     }
 };
 
-const filterByTalker = async (q, rate) => {
+const filterByTalker = async (q, rate, date) => {
     const talkers = await readFile();
     let talkersByQuery = talkers;
 
@@ -33,6 +33,10 @@ const filterByTalker = async (q, rate) => {
 
     if (rate) {
         talkersByQuery = talkersByQuery.filter((talker) => talker.talk.rate === rate);
+    }
+
+    if (date) {
+        talkersByQuery = talkersByQuery.filter((talker) => talker.talk.watchedAt === date);
     }
 
     return talkersByQuery;
