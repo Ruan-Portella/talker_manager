@@ -10,6 +10,7 @@ const validateRate = require('../middlewares/validateRate');
 const validateFilterRate = require('../middlewares/validateFilterRate');
 const validateFilterDate = require('../middlewares/validateFilterDate');
 const validatePatch = require('../middlewares/validatePatch');
+const connection = require('../db/connection');
 
 const router = express.Router();
 
@@ -20,6 +21,25 @@ router.get('/search', validateToken, validateFilterRate, validateFilterDate, asy
         return res.status(200).json(query);
     } catch (error) {
         return res.status(500).json({ error });
+    }
+});
+
+router.get('/db', async (req, res) => {
+    try {
+        const [talkers] = await connection.execute('SELECT * FROM talkers;');
+
+        if (!talkers) return res.status(200).json([]);
+
+        const talkerResults = talkers.map((talker) => ({
+            name: talker.name,
+            age: talker.age,
+            id: talker.id,
+            talk: { watchedAt: talker.talk_watched_at, rate: talker.talk_rate },
+        }));
+
+        return res.status(200).json(talkerResults);
+    } catch (error) {
+        res.status(500).json({ error });
     }
 });
 

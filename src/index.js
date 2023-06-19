@@ -1,6 +1,7 @@
 const express = require('express');
 const talkerRoute = require('./routes/talkerRoute');
 const loginRoute = require('./routes/loginRoute');
+const connection = require('./db/connection');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,11 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  const [result] = await connection.execute('SELECT 1');
+  if (result) {
+    console.log('MySQL connection OK');
+  }
+
   console.log('Online');
 });
