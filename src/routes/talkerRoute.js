@@ -1,5 +1,6 @@
 const express = require('express');
 const { readFile, readFileById } = require('../utils/readFile');
+const { writeFile } = require('../utils/writeFile');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -23,6 +24,21 @@ router.get('/:id', async (req, res) => {
         return res.status(404).json({
             "message": 'Pessoa palestrante não encontrada'
           })
+    }
+})
+
+router.post('/', async (req, res) => {
+    try {
+        const {body} = req;
+        const talkers = await readFile();
+        const newTalker = {
+            id: Number(talkers[talkers.length - 1].id) + 1,
+            ...body
+        }
+        await writeFile(newTalker);
+        return res.status(201).json(newTalker);
+    } catch (error) {
+        return res.status(500).json({error: error})
     }
 })
 
