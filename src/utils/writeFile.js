@@ -41,6 +41,6 @@ const deleteFile = async (id) => {
     } catch (error) {
         console.error('Não foi possível deletar o talker');
     }
-}
+};
 
 module.exports = { writeFile, updateFile, deleteFile };
