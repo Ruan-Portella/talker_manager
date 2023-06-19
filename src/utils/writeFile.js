@@ -31,6 +31,22 @@ const updateFile = async (id, talker) => {
     }
 };
 
+const updatePatch = async (id, rate) => {
+    try {
+        const talkers = await readFile();
+        const updateTalkers = talkers.map((talker) => {
+            if (talker.id === id) { 
+                return { ...talker, talk: { ...talker.talk, rate } };
+            }  
+            return talker;
+        });
+        await fs.writeFile(talkerPath, JSON.stringify(updateTalkers));
+        return updateTalkers;
+    } catch (error) {
+        console.log('não foi possível atualizar o talker');
+    }
+};
+
 const deleteFile = async (id) => {
     try {
         const talkers = await readFile();
@@ -43,4 +59,4 @@ const deleteFile = async (id) => {
     }
 };
 
-module.exports = { writeFile, updateFile, deleteFile };
+module.exports = { writeFile, updateFile, deleteFile, updatePatch };

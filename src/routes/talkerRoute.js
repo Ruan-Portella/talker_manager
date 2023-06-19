@@ -1,6 +1,6 @@
 const express = require('express');
 const { readFile, readFileById, filterByTalker } = require('../utils/readFile');
-const { writeFile, updateFile, deleteFile } = require('../utils/writeFile');
+const { writeFile, updateFile, deleteFile, updatePatch } = require('../utils/writeFile');
 const validateToken = require('../middlewares/validateToken');
 const validateName = require('../middlewares/validateName');
 const validateTalk = require('../middlewares/validateTalk');
@@ -9,6 +9,7 @@ const validateWatched = require('../middlewares/validateWatched');
 const validateRate = require('../middlewares/validateRate');
 const validateFilterRate = require('../middlewares/validateFilterRate');
 const validateFilterDate = require('../middlewares/validateFilterDate');
+const validatePatch = require('../middlewares/validatePatch');
 
 const router = express.Router();
 
@@ -76,6 +77,15 @@ validateTalk, validateWatched, validateRate, async (req, res) => {
 router.delete('/:id', validateToken, async (req, res) => {
     try {
         await deleteFile(Number(req.params.id));
+        return res.status(204).end();
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+});
+
+router.patch('/rate/:id', validateToken, validatePatch, async (req, res) => {
+    try {
+        await updatePatch(Number(req.params.id), req.body.rate);
         return res.status(204).end();
     } catch (error) {
         return res.status(500).json({ error });
