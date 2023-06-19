@@ -1,6 +1,12 @@
 const express = require('express');
 const { readFile, readFileById } = require('../utils/readFile');
 const { writeFile } = require('../utils/writeFile');
+const validateToken = require('../middlewares/validateToken');
+const validateName = require('../middlewares/validateName');
+const validateTalk = require('../middlewares/validateTalk');
+const validateAge = require('../middlewares/validateAge');
+const validateWatched = require('../middlewares/validateWatched');
+const validateRate = require('../middlewares/validateRate');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -27,9 +33,9 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', validateToken, validateName, validateAge, validateTalk, validateWatched, validateRate,  async (req, res) => {
     try {
-        const {body} = req;
+        const { body } = req;
         const talkers = await readFile();
         const newTalker = {
             id: Number(talkers[talkers.length - 1].id) + 1,
