@@ -1,6 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const { readFile, readFileById } = require('./readFile');
+
 const talkerPath = path.resolve(__dirname, '../talker.json');
 
 const writeFile = async (talker) => {
@@ -11,23 +12,23 @@ const writeFile = async (talker) => {
     } catch (error) {
         console.log('Não foi possível escrever no arquivo');
     }
-}
+};
 
 const updateFile = async (id, talker) => {
     try {
         const talkersById = await readFileById(id);
         if (talkersById.length === 0) {
-            return false
+            return false;
            }
         const talkers = await readFile();
-        const talkerIndex = talkers.findIndex((talker) => talker.id === id);
-        talkers[talkerIndex] = {id, ...talker};
+        const talkerIndex = talkers.findIndex((talke) => talke.id === id);
+        talkers[talkerIndex] = { id, ...talker };
         await fs.writeFile(talkerPath, JSON.stringify(talkers));
 
         return talkers[talkerIndex];
     } catch (error) {
         console.log('Não foi possível atualizar o talker');
     }
-}
+};
 
-module.exports = { writeFile, updateFile }
+module.exports = { writeFile, updateFile };
