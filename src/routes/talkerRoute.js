@@ -1,6 +1,6 @@
 const express = require('express');
 const { readFile, readFileById } = require('../utils/readFile');
-const { writeFile, updateFile } = require('../utils/writeFile');
+const { writeFile, updateFile, deleteFile } = require('../utils/writeFile');
 const validateToken = require('../middlewares/validateToken');
 const validateName = require('../middlewares/validateName');
 const validateTalk = require('../middlewares/validateTalk');
@@ -60,5 +60,14 @@ validateTalk, validateWatched, validateRate, async (req, res) => {
         return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
 });
+
+router.delete('/:id', validateToken, async (req, res) => {
+    try {
+        await deleteFile(Number(req.params.id));
+        return res.status(204).end();
+    } catch (error) {
+        return res.status(500).json({ error })
+    }
+})
 
 module.exports = router;

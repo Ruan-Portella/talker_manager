@@ -31,4 +31,16 @@ const updateFile = async (id, talker) => {
     }
 };
 
-module.exports = { writeFile, updateFile };
+const deleteFile = async (id) => {
+    try {
+        const talkers = await readFile();
+        const removeTalker = talkers.filter((talker) => talker.id !== id);
+        await fs.writeFile(talkerPath, JSON.stringify(removeTalker));
+
+        return removeTalker;
+    } catch (error) {
+        console.error('Não foi possível deletar o talker');
+    }
+}
+
+module.exports = { writeFile, updateFile, deleteFile };
