@@ -22,13 +22,17 @@ const readFileById = async (id) => {
     }
 };
 
-const filterByTalker = async (q) => {
+const filterByTalker = async (q, rate) => {
     const talkers = await readFile();
     let talkersByQuery = talkers;
 
     if (q) {
         talkersByQuery = talkersByQuery.filter((talker) => talker.name.toLowerCase()
         .includes(q.toLowerCase()));
+    }
+
+    if (rate) {
+        talkersByQuery = talkersByQuery.filter((talker) => talker.talk.rate === rate);
     }
 
     return talkersByQuery;
