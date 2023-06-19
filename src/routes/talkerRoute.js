@@ -1,6 +1,6 @@
 const express = require('express');
 const { readFile, readFileById } = require('../utils/readFile');
-const { writeFile } = require('../utils/writeFile');
+const { writeFile, updateFile } = require('../utils/writeFile');
 const validateToken = require('../middlewares/validateToken');
 const validateName = require('../middlewares/validateName');
 const validateTalk = require('../middlewares/validateTalk');
@@ -45,6 +45,16 @@ router.post('/', validateToken, validateName, validateAge, validateTalk, validat
         return res.status(201).json(newTalker);
     } catch (error) {
         return res.status(500).json({error: error})
+    }
+})
+
+router.put('/:id', validateToken, validateName, validateAge, validateTalk, validateWatched, validateRate, async (req, res) => {
+    try {
+        const updateTalker = await updateFile(Number(req.params.id), req.body);
+        if (!updateTalker) throw new Error('Pessoa palestrante não encontrada')
+        return res.status(200).json(updateTalker)
+    } catch {
+        return res.status(404).json({message: 'Pessoa palestrante não encontrada'})
     }
 })
 
