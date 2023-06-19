@@ -22,4 +22,16 @@ const readFileById = async (id) => {
     }
 };
 
-module.exports = { readFile, readFileById };
+const filterByTalker = async (q) => {
+    const talkers = await readFile();
+    let talkersByQuery = talkers;
+
+    if (q) {
+        talkersByQuery = talkersByQuery.filter((talker) => talker.name.toLowerCase()
+        .includes(q.toLowerCase()));
+    }
+
+    return talkersByQuery;
+};
+
+module.exports = { readFile, readFileById, filterByTalker };

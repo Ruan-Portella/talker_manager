@@ -1,5 +1,5 @@
 const express = require('express');
-const { readFile, readFileById } = require('../utils/readFile');
+const { readFile, readFileById, filterByTalker } = require('../utils/readFile');
 const { writeFile, updateFile, deleteFile } = require('../utils/writeFile');
 const validateToken = require('../middlewares/validateToken');
 const validateName = require('../middlewares/validateName');
@@ -9,6 +9,16 @@ const validateWatched = require('../middlewares/validateWatched');
 const validateRate = require('../middlewares/validateRate');
 
 const router = express.Router();
+
+router.get('/search', validateToken, async (req, res) => {
+    try {
+        const { q } = req.query;
+        const query = await filterByTalker(q);
+        return res.status(200).json(query);
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+});
 
 router.get('/', async (req, res) => {
     try {
