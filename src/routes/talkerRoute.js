@@ -12,7 +12,7 @@ const validateFilterDate = require('../middlewares/validateFilterDate');
 
 const router = express.Router();
 
-router.get('/search', validateToken, validateFilterRate,  validateFilterDate,   async (req, res) => {
+router.get('/search', validateToken, validateFilterRate, validateFilterDate, async (req, res) => {
     try {
         const { q, rate, date } = req.query;
         const query = await filterByTalker(q, Number(rate), date);

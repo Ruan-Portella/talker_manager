@@ -9,6 +9,6 @@ const validateFilterDate = (req, res, next) => {
         });
     }
     next();
-}
+};
 
 module.exports = validateFilterDate;
